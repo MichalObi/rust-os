@@ -9,11 +9,11 @@
 
 use core::panic::PanicInfo; // providing info about panic - line of broken code and optional msg
 
-#[panic_implementation] // implement fn that will be called on panic
-
 // turn off name mangling (aka. name decoration) - generate unique functions names by compiler
 #[no_mangle]
 
+// ! will will ensure that panic will never return anything
+#[panic_handler] // implement fn that will be called on panic
 pub fn panic(_info: &PanicInfo) -> ! {
     loop {}
 }
