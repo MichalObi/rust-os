@@ -20,6 +20,18 @@ pub fn panic(_info: &PanicInfo) -> ! {
 
 // never return
 #[no_mangle] // this is important to find _start fn
-pub extern "C" fn _start() -> ! { // _start is entry point search by linker (_start before main()) 
+pub extern "C" fn _start() -> ! { // _start is entry point search by linker (_start before main())
+    loop {}
+}
+
+// On Windows:
+#[no_mangle]
+pub extern "C" fn mainCRTStartup() -> ! {
+    main();
+}
+
+// On macOS:
+#[no_mangle]
+pub extern "C" fn main() -> ! {
     loop {}
 }
