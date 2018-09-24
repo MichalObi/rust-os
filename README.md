@@ -11,3 +11,7 @@
 ```
   rustup override add nightly
 ```
+3) Compile with this command (Linux only)
+```
+cargo rustc -- -Z pre-link-arg=-nostartfiles
+```
