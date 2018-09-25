@@ -11,7 +11,11 @@
 ```
   rustup override add nightly
 ```
-3) Compile with this command (Linux only)
+3) Install cargo xbuild to cross-compile build-in libs.
 ```
-cargo rustc -- -Z pre-link-arg=-nostartfiles
+cargo install cargo-xbuild / rustup component add rust-src (if needed)
+```
+4) Compile with this command (Linux only) with specific compiler config as target
+```
+cargo xbuild --target x86_64-rust_os.json
 ```
