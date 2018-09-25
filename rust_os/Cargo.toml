@@ -5,9 +5,3 @@ authors = ["MichalObi <ndwz123@gmail.com>"]
 
 # When we writing bare-metal binary we need to to change default panic behavior.
 # Instead of stack unwinding (cleaning stack with OS help), we abort on panic.
-
-[profile.dev] # For "cargo build"
-panic="abort"
-
-[profile.release] # For "cargo build --release" 
-panic="abort"
