@@ -18,8 +18,35 @@ pub fn panic(_info: &PanicInfo) -> ! {
     loop {}
 }
 
-// never return
-#[no_mangle] // this is important to find _start fn
-pub extern "C" fn _start() -> ! { // _start is entry point search by linker (_start before main())
+// static (sort of global) byte string
+static WELCOME: &[u8] = b"Welcome in Rust OS!";
+
+// this is important to find _start fn
+#[no_mangle]
+
+// _start is entry point search by linker (_start before main())
+// ! mean never return
+
+pub extern "C" fn _start() -> ! {
+    // address of vga memory location
+    let video_memory_location = 0xb8000;
+
+    // cyan color
+    let letter_color = 0xb;
+
+    // cast to "raw pointer" -> not so safe, but fast
+    let vga_buffer = video_memory_location as *mut u8;
+
+    for (i, &byte) in WELCOME.iter().enumerate() {
+        // no guarantee that vga_buffer as raw pointer will be valid - but in this point we sure it does
+        unsafe {
+            // write letter of WELCOME word - 2 bytes for every cell
+            *vga_buffer.offset(i as isize * 2) = byte;
+
+            // give letter color
+            *vga_buffer.offset(i as isize * 2 + 1) = letter_color;
+        }
+    }
+
     loop {}
 }
