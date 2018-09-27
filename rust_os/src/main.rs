@@ -1,3 +1,5 @@
+extern crate bootloader_precompiled; // for kernel load
+
 #![feature(panic_implementation)]
 
 /*
