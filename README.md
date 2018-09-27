@@ -15,7 +15,11 @@
 ```
 cargo install cargo-xbuild / rustup component add rust-src (if needed)
 ```
-4) Compile with this command (Linux only) with specific compiler config as target
+4) Add bootimage utility to compile kernel and bootloader and combine them both.
 ```
-cargo xbuild --target x86_64-rust_os.json
+cargo install bootimage --version "^0.5.0"
+```
+5) Compile with this command (Linux only) with specific compiler config as target
+```
+bootimage build
 ```

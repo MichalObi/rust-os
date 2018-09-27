@@ -1,5 +1,3 @@
-extern crate bootloader_precompiled; // for kernel load
-
 #![feature(panic_implementation)]
 
 /*
@@ -10,6 +8,7 @@ extern crate bootloader_precompiled; // for kernel load
 #![no_std] // don't link the Rust standard library
 #![no_main] // disable all Rust-level entry points - no main fn runtime
 
+extern crate bootloader_precompiled; // for kernel load
 
 use core::panic::PanicInfo; // providing info about panic - line of broken code and optional msg
 
