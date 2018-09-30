@@ -23,3 +23,11 @@ cargo install bootimage --version "^0.5.0"
 ```
 bootimage build
 ```
+6) Intall QEMU as virtual machine for our kernel
+```
+sudo apt-get install qemu
+```
+7) Bootload rust_os on top of QEMU virtual machine via bootimage utility
+```
+bootimage run
+``
