@@ -21,10 +21,57 @@ pub enum Color {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-struct ColorCode(u8);
+struct ColorCode(u8); // u8 is value from 0 - 255 (2^8)
 
 impl ColorCode {
     fn new(foreground: Color, background: Color) -> ColorCode {
-        ColorCode((foreground as u8) | (background as u8) << 4)
+        ColorCode((foreground as u8) | (background as u8) << 4) // << left-shift operator (?)
     }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)] // C type layout quarantee fields order in enum
+struct ScreenChar {
+    ascii_character: u8, // ASCII code point - actuale letter
+    color_code: ColorCode, // contain foreground and background
+}
+
+const BUFFER_HEIGHT: usize = 25; // VGA buffer array rows size
+const BUFFER_WIDTH: usize = 80; // VGA buffer columns size
+
+struct Buffer {
+    chars: [[ScreenChar; BUFFER_WIDTH]; BUFFER_HEIGHT],
+}
+
+pub struct Write {
+    column_position: usize, // current position in the last row
+    color_code: ColorCode,
+    buffer: &'static mut Buffer, // 'static tell compiler that Buffer will be valid fot the whole program runtime
+}
+
+impl Write {
+    pub fn write_byte(&mut self, byte: u8) {
+        match byte {
+            b'\n' => self.new_line(), // if user provide new line (\n) - go to new line fn
+            byte => {
+                if self.column_position >= BUFFER_WIDTH { // if is last line
+                    self.new_line(); // go to new line fn
+                }
+
+                let row = BUFFER_HEIGHT - 1; // current row
+                let col = self.column_position; // current column
+                let color_code = self.color_code; // current color
+
+                // write to the buffer at the current position
+                self.buffer.chars[row][col] =  ScreenChar {
+                    ascii_character: byte,
+                    color_code: color_code,
+                };
+
+                self.column_position += 1:
+            }
+        }
+    }
+
+    fn new_line(&mut self) {}
 }
