@@ -68,10 +68,20 @@ impl Write {
                     color_code: color_code,
                 };
 
-                self.column_position += 1:
+                self.column_position += 1;
             }
         }
     }
 
     fn new_line(&mut self) {}
+
+    pub fn write_string(&mut self, string: &str) {
+        for byte in string.bytes() {
+            let empty_char = 0xfe;
+            match byte {
+                0x20...0x7e | b'\n' => self.write_byte(byte), // ASCII | new line
+                _ => self.write_byte(empty_char), //not ASCII
+            }
+        }
+    }
 }
