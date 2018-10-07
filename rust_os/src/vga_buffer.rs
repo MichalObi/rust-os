@@ -43,13 +43,13 @@ struct Buffer {
     chars: [[ScreenChar; BUFFER_WIDTH]; BUFFER_HEIGHT],
 }
 
-pub struct Write {
+pub struct Writer {
     column_position: usize, // current position in the last row
     color_code: ColorCode,
     buffer: &'static mut Buffer, // 'static tell compiler that Buffer will be valid fot the whole program runtime
 }
 
-impl Write {
+impl Writer {
     pub fn write_byte(&mut self, byte: u8) {
         match byte {
             b'\n' => self.new_line(), // if user provide new line (\n) - go to new line fn
@@ -84,4 +84,17 @@ impl Write {
             }
         }
     }
+}
+
+// tmp fn to test Writer struct
+pub fn print_test_text(text: &str) {
+    // address of vga memory location
+    let video_memory_location = 0xb8000;
+    let mut writter = Writer {
+        column_position: 0,
+        color_code: ColorCode::new(Color::Pink, Color::Black),
+        buffer: unsafe { &mut *(video_memory_location as *mut Buffer) },
+    };
+
+    writter.write_string(text);
 }

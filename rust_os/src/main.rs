@@ -51,5 +51,8 @@ pub extern "C" fn _start() -> ! {
         }
     }
 
+    let test_text = "Test text !";
+    vga_buffer::print_test_text(test_text);
+
     loop {}
 }
