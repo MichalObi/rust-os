@@ -12,6 +12,8 @@ mod vga_buffer; // load vga module from vga_buffer.rs file
 
 extern crate bootloader_precompiled; // for kernel load
 
+extern crate volatile; // prevent too agresive compiler optimization when writing to VGA buffer
+
 use core::panic::PanicInfo; // providing info about panic - line of broken code and optional msg
 
 // ! will will ensure that panic will never return anything

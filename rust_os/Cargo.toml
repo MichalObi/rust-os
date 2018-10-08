@@ -3,10 +3,12 @@ name = "rust_os"
 version = "0.1.0"
 authors = ["MichalObi <ndwz123@gmail.com>"]
 
-# need bootloader to initializes CPU and load our rust_os kernel
+#need bootloader to initializes CPU and load our rust_os kernel
+# volatile prevent rust compiler from too agresive optimization when writing to VGA buffer
 
 [dependencies]
 bootloader_precompiled = "0.2.0"
+volatile = "0.2.3"
 
 [package.metadata.bootimage]
 default-target = "x86_64-rust_os.json"

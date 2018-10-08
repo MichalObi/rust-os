@@ -1,3 +1,5 @@
+use volatile::Volatile;
+
 #[allow(dead_code)] // disabled unused code warnings for Color variants
 #[derive(Debug, Clone, Copy, PartialEq, Eq)] // we can derive some common traits for our need
 #[repr(u8)] // set type layout of enum
@@ -40,7 +42,7 @@ const BUFFER_HEIGHT: usize = 25; // VGA buffer array rows size
 const BUFFER_WIDTH: usize = 80; // VGA buffer columns size
 
 struct Buffer {
-    chars: [[ScreenChar; BUFFER_WIDTH]; BUFFER_HEIGHT],
+    chars: [[Volatile<ScreenChar>; BUFFER_WIDTH]; BUFFER_HEIGHT], // use generic Volatile
 }
 
 pub struct Writer {
@@ -63,10 +65,10 @@ impl Writer {
                 let color_code = self.color_code; // current color
 
                 // write to the buffer at the current position
-                self.buffer.chars[row][col] =  ScreenChar {
+                self.buffer.chars[row][col].write(ScreenChar { // usage of write prevent to agresive compiler optimization
                     ascii_character: byte,
                     color_code: color_code,
-                };
+                });
 
                 self.column_position += 1;
             }
