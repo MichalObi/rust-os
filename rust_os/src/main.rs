@@ -53,8 +53,10 @@ pub extern "C" fn _start() -> ! {
         }
     }
 
-    let test_text = "Test text !";
-    vga_buffer::print_test_text(test_text);
+    // let test_text = "Test text !";
+    // vga_buffer::print_test_text(test_text);
+    
+    vga_buffer::print_with_macro_test();
 
     loop {}
 }

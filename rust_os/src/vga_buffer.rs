@@ -1,4 +1,5 @@
 use volatile::Volatile;
+use core::fmt; // format core functionality
 
 #[allow(dead_code)] // disabled unused code warnings for Color variants
 #[derive(Debug, Clone, Copy, PartialEq, Eq)] // we can derive some common traits for our need
@@ -77,7 +78,7 @@ impl Writer {
 
     fn new_line(&mut self) {}
 
-    pub fn write_string(&mut self, string: &str) {
+    pub fn write_str(&mut self, string: &str) {
         for byte in string.bytes() {
             let empty_char = 0xfe;
             match byte {
@@ -92,11 +93,31 @@ impl Writer {
 pub fn print_test_text(text: &str) {
     // address of vga memory location
     let video_memory_location = 0xb8000;
-    let mut writter = Writer {
+    let mut writer = Writer {
         column_position: 0,
         color_code: ColorCode::new(Color::Pink, Color::Black),
         buffer: unsafe { &mut *(video_memory_location as *mut Buffer) },
     };
 
-    writter.write_string(text);
+    writer.write_str(text);
+}
+
+
+// This macro will help print different types
+impl fmt::Write for Writer {
+    fn write_str(&mut self, string: &str) -> fmt::Result {
+        self.write_str(string);
+        Ok(())
+    }
+}
+
+pub fn print_with_macro_test() {
+    use core::fmt::Write;
+    let video_memory_location = 0xb8000;
+    let mut writer = Writer {
+        column_position: 0,
+        color_code: ColorCode::new(Color::Pink, Color::Black),
+        buffer: unsafe { &mut *(video_memory_location as *mut Buffer) },
+    };
+    write!(writer, "The numbers for {} are {}", "test", 2.0/3.0).unwrap();
 }
