@@ -76,7 +76,29 @@ impl Writer {
         }
     }
 
-    fn new_line(&mut self) {}
+    fn new_line(&mut self) {
+        for row in 1..BUFFER_HEIGHT {
+            for col in 0..BUFFER_WIDTH {
+                let character = self.buffer.chars[row][col].read();
+                self.buffer.chars[row - 1][col].write(character);
+            }
+        }
+
+        self.clear_row(BUFFER_HEIGHT - 1); // row off the screen
+        self.column_position = 0;
+    }
+
+    fn clear_row(&mut self, row: usize) { // override with space character
+        // empty character
+        let blank = ScreenChar {
+            ascii_character: b' ',
+            color_code: self.color_code
+        };
+
+        for col in 0..BUFFER_WIDTH {
+            self.buffer.chars[row][col].write(blank);
+        }
+    }
 
     pub fn write_str(&mut self, string: &str) {
         for byte in string.bytes() {
