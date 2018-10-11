@@ -12,3 +12,7 @@ volatile = "0.2.3"
 
 [package.metadata.bootimage]
 default-target = "x86_64-rust_os.json"
+
+[dependencies.lazy_static] #help write global interface for Writer
+version = "1.0"
+features = ["spin_no_std"]

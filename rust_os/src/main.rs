@@ -16,6 +16,9 @@ extern crate volatile; // prevent too agresive compiler optimization when writin
 
 use core::panic::PanicInfo; // providing info about panic - line of broken code and optional msg
 
+#[macro_use]
+extern crate lazy_static; // lazly initialized static when acessed first time (instead of at compile time)
+
 // ! will will ensure that panic will never return anything
 #[panic_handler] // implement fn that will be called on panic
 #[no_mangle]
@@ -55,7 +58,7 @@ pub extern "C" fn _start() -> ! {
 
     // let test_text = "Test text !";
     // vga_buffer::print_test_text(test_text);
-    
+
     vga_buffer::print_with_macro_test();
 
     loop {}
