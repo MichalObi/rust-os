@@ -1,5 +1,14 @@
 use volatile::Volatile;
 use core::fmt; // format core functionality
+use spin::Mutex; // Mutex from extern crate (no std here !)
+
+lazy_static! {
+    pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer {
+        column_position: 0,
+        color_code: ColorCode::new(Color::Yellow, Color::Black),
+        buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
+    });
+}
 
 #[allow(dead_code)] // disabled unused code warnings for Color variants
 #[derive(Debug, Clone, Copy, PartialEq, Eq)] // we can derive some common traits for our need

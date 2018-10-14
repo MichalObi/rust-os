@@ -14,6 +14,8 @@ extern crate bootloader_precompiled; // for kernel load
 
 extern crate volatile; // prevent too agresive compiler optimization when writing to VGA buffer
 
+extern crate spin; // introduce spinlock - can provide very simple lock (like Mutex in std)
+
 use core::panic::PanicInfo; // providing info about panic - line of broken code and optional msg
 
 #[macro_use]
@@ -37,29 +39,33 @@ static WELCOME: &[u8] = b"Welcome in Rust OS!";
 
 pub extern "C" fn _start() -> ! {
     // address of vga memory location
-    let video_memory_location = 0xb8000;
+    // let video_memory_location = 0xb8000;
+    //
+    // // cyan color
+    // let letter_color = 0xb;
+    //
+    // // cast to "raw pointer" -> not so safe, but fast
+    // let vga_buffer = video_memory_location as *mut u8;
+    //
+    // for (i, &byte) in WELCOME.iter().enumerate() {
+    //     // no guarantee that vga_buffer as raw pointer will be valid - but in this point we sure it does
+    //     unsafe {
+    //         // write letter of WELCOME word - 2 bytes for every cell
+    //         *vga_buffer.offset(i as isize * 2) = byte;
+    //
+    //         // give letter color
+    //         *vga_buffer.offset(i as isize * 2 + 1) = letter_color;
+    //     }
+    // }
 
-    // cyan color
-    let letter_color = 0xb;
-
-    // cast to "raw pointer" -> not so safe, but fast
-    let vga_buffer = video_memory_location as *mut u8;
-
-    for (i, &byte) in WELCOME.iter().enumerate() {
-        // no guarantee that vga_buffer as raw pointer will be valid - but in this point we sure it does
-        unsafe {
-            // write letter of WELCOME word - 2 bytes for every cell
-            *vga_buffer.offset(i as isize * 2) = byte;
-
-            // give letter color
-            *vga_buffer.offset(i as isize * 2 + 1) = letter_color;
-        }
-    }
-
-    // let test_text = "Test text !";
+    let test_text = "Test text ! \n";
+    
     // vga_buffer::print_test_text(test_text);
+    // vga_buffer::print_with_macro_test();
 
-    vga_buffer::print_with_macro_test();
+    use core::fmt::Write;
+    vga_buffer::WRITER.lock().write_str(test_text);
+    write!(vga_buffer::WRITER.lock(), "Test numbers printing: {} {}", 21, 1.211).unwrap();
 
     loop {}
 }
