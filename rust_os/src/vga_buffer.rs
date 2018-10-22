@@ -142,6 +142,26 @@ impl fmt::Write for Writer {
     }
 }
 
+
+macro_rules! print {
+    // use vga_buffer public method to print
+    ($($arg:tt)*) => ($crate::vga_buffer::print(format_args!($($arg)*)));
+}
+
+macro_rules! println {
+    // empty line, if no param passed like println!()
+    () => (print!("\n"));
+    // print with one arg like println!("TEST")
+    ($fmt:expr) => (print!(concat!($fmt, "\n")));
+     // print with multiple param like println!("Numbers: {}{}", 1, 2)
+    ($fmt:expr, $($arg:tt)*) => (print!(concat!($fmt, "\n"), $($arg)*));
+}
+
+pub fn print(args: fmt::Arguments) {
+    use core::fmt::Write;
+    WRITER.lock().write_fmt(args).unwrap(); // unwrap make panic if printic not happened well
+}
+
 pub fn print_with_macro_test() {
     use core::fmt::Write;
     let video_memory_location = 0xb8000;
