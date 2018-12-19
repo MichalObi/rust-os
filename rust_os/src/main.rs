@@ -1,3 +1,4 @@
+#![cfg_attr(test, allow(unused_imports))] // disabled lints about import
 #![feature(panic_implementation)]
 
 /*
@@ -5,8 +6,10 @@
     OS-based fn like handling thread or files system etc. .
 */
 
-#![no_std] // don't link the Rust standard library
-#![cfg_attr(not(test), no_main)] // disable all Rust-level entry points - no main fn runtime (if not test)
+/* if no test (cargo test) */
+
+#![cfg_attr(not(test), no_std)] // don't link the Rust standard library
+#![cfg_attr(not(test), no_main)] // disable all Rust-level entry points - no main fn runtime
 
 #[macro_use] // important annotation ! - import macros defined in vga_buffer with vga_buffer
 mod vga_buffer; // load vga module from vga_buffer.rs file
@@ -16,6 +19,8 @@ extern crate bootloader_precompiled; // for kernel load
 extern crate volatile; // prevent too agresive compiler optimization when writing to VGA buffer
 
 extern crate spin; // introduce spinlock - can provide very simple lock (like Mutex in std)
+
+extern crate core;
 
 use core::panic::PanicInfo; // providing info about panic - line of broken code and optional msg
 
