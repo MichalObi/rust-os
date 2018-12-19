@@ -26,6 +26,7 @@ extern crate lazy_static; // lazly initialized static when acessed first time (i
 #[panic_handler] // implement fn that will be called on panic
 #[no_mangle]
 pub fn panic(_info: &PanicInfo) -> ! {
+    println!("{}", _info);
     loop {}
 }
 
@@ -69,6 +70,8 @@ pub extern "C" fn _start() -> ! {
     // write!(vga_buffer::WRITER.lock(), "Test numbers printing: {} {}", 21, 1.211).unwrap();
 
     println!("Hello World and ... {}, {}, test: {}", test_text, 2, "ababa");
+
+    panic!("Some test panic msg");
 
     loop {}
 }
