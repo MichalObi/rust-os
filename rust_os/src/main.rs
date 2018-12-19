@@ -6,7 +6,7 @@
 */
 
 #![no_std] // don't link the Rust standard library
-#![no_main] // disable all Rust-level entry points - no main fn runtime
+#![cfg_attr(not(test), no_main)] // disable all Rust-level entry points - no main fn runtime (if not test)
 
 #[macro_use] // important annotation ! - import macros defined in vga_buffer with vga_buffer
 mod vga_buffer; // load vga module from vga_buffer.rs file
@@ -25,6 +25,7 @@ extern crate lazy_static; // lazly initialized static when acessed first time (i
 // ! will will ensure that panic will never return anything
 #[panic_handler] // implement fn that will be called on panic
 #[no_mangle]
+#[cfg(not(test))] // compile only if test flag is not set (not compile when "cargo test" occured)
 pub fn panic(_info: &PanicInfo) -> ! {
     println!("{}", _info);
     loop {}
@@ -33,12 +34,11 @@ pub fn panic(_info: &PanicInfo) -> ! {
 // static (sort of global) byte string
 static WELCOME: &[u8] = b"Welcome in Rust OS!";
 
-// this is important to find _start fn
-#[no_mangle]
-
 // _start is entry point search by linker (_start before main())
 // ! mean never return
 
+#[cfg(not(test))] // compile only if test flag is not set (not compile when "cargo test" occured)
+#[no_mangle] // this is important to find _start fn
 pub extern "C" fn _start() -> ! {
     // address of vga memory location
     // let video_memory_location = 0xb8000;
