@@ -172,3 +172,13 @@ pub fn print_with_macro_test() {
     };
     write!(writer, "The numbers for {} are {}", "test", 2.0/3.0).unwrap();
 }
+
+/* Unit tests */
+
+#[cfg(test)]
+mod test {
+    use super::*; // import vga_buffer functions to test
+
+    #[test]
+    fn test() {}
+}
