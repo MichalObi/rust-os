@@ -179,6 +179,36 @@ pub fn print_with_macro_test() {
 mod test {
     use super::*; // import vga_buffer functions to test
 
-    #[test]
-    fn test() {}
+    // First create main items based on Struct - Wirter, Buffer, ScreenChar
+
+    fn construct_writer() -> Writer {
+        /* Box will help to store date on heap - pointer will remain
+           on stack - buffer will need to be &'static mut ike in struct definition */
+
+        use std::boxed::Box;
+
+        let buffer = construct_buffer();
+
+        /*
+            Box new will allocate memory on heap and place buffer there.
+            Box leak will return mutable reference that we need
+        */
+
+        Writer {
+            column_position: 0,
+            color_code: ColorCode::new(Color::Yellow, Color::White),
+            buffer: Box::leak(Box::new(buffer))
+        }
+    }
+
+    fn construct_buffer() -> Buffer {
+        Buffer {
+            chars: [[Volatile::new(empty_char()); BUFFER_WIDTH]; BUFFER_HEIGHT]
+        }
+    }
+
+    fn empty_char() -> ScreenChar {
+        ascii_character: b' ',
+        color_code: ColorCode::new(Color::Yellow, Color::White)
+    }
 }
