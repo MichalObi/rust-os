@@ -202,8 +202,12 @@ mod test {
     }
 
     fn construct_buffer() -> Buffer {
+        /* array_init dev dependencies will remove Volatile wrapper Copy content array trait error - only needed for 'cargo test' command */
+
+        use array_init::array_init;
+
         Buffer {
-            chars: [[Volatile::new(empty_char()); BUFFER_WIDTH]; BUFFER_HEIGHT]
+            chars: array_init(|_| array_init(|_| Volatile::new(empty_char())))
         }
     }
 

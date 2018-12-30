@@ -3,7 +3,7 @@ name = "rust_os"
 version = "0.1.0"
 authors = ["MichalObi <ndwz123@gmail.com>"]
 
-#need bootloader to initializes CPU and load our rust_os kernel
+# need bootloader to initializes CPU and load our rust_os kernel
 # volatile prevent rust compiler from too agresive optimization when writing to VGA buffer
 
 [dependencies]
@@ -17,3 +17,9 @@ default-target = "x86_64-rust_os.json"
 [dependencies.lazy_static] #help write global interface for Writer
 version = "1.0"
 features = ["spin_no_std"]
+
+# dependenices needed only for non-build operations - like cargo test
+# array-init - allow 'Volatile' wrapper to return 'Copy types' that array content need
+
+[dev-dependencies]
+array-init = "0.0.3"
